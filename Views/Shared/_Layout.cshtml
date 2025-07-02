@@ -1,0 +1,183 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width">
+    <environment include="Development">
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
+              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+    </environment>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+            <a class="navbar-brand" asp-controller="home" asp-action="index">
+                <img src="~/images/icon.png" width="30" height="30" alt="Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="student" asp-action="index">
+                                    Student
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="account" asp-action="ChangePassword">
+                                    ChangePassword
+                                </a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Teacher") || User.IsInRole("Class Teacher"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="teacher" asp-action="index">
+                                    Teacher
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Options
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-controller="account" asp-action="ChangePassword">
+                                            ChangePassword
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else//if admin
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="student" asp-action="index">
+                                    Student
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="teacher" asp-action="index">
+                                    Teacher
+                                </a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Options
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-controller="account" asp-action="ChangePassword">
+                                         Change Password
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+                    }
+
+                    @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Create
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="student" asp-action="create">
+                                        Create Student
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="teacher" asp-action="create">
+                                        Create Teacher
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Manage
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Administration" asp-action="ListUsers">
+                                        Users
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Administration" asp-action="ListRoles">
+                                        Roles
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav" style="margin-left: auto">
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <form method="post" asp-controller="account" asp-action="logout" class="form-inline">
+                                <button type="submit" class="nav-link btn btn-link py-0">
+                                    Logout @User.Identity.Name
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="register">
+                                Register
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="account" asp-action="login">
+                                Login
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+
+        <div>
+            @RenderBody()
+        </div>
+
+        @if (IsSectionDefined("Scripts"))
+        {
+            @RenderSection("Scripts", required: false)
+        }
+    </div>
+
+</body>
+</html>

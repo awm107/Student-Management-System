@@ -1,0 +1,43 @@
+﻿@model IEnumerable<StudentManagement.Models.Teacher>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+@inject UserManager<ApplicationUser> userManager
+
+@{
+    ViewBag.Title = "Teacher List";
+    var loggedInUserId = userManager.GetUserId(User); // Get the ID of the logged-in user
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var teacher in Model)
+        {
+            var photoPath = Url.Content("~/images/" + (teacher.Photopath ?? "noimage.jpg"));
+            <div class="col-md-4 mb-4">
+                <div class="card m-auto" style="width: 100%">
+                    <div class="card-header">
+                        <h3>@teacher.Name</h3>
+                    </div>
+                    <img class="card-img-top imageThumbnail img-fluid" src="@photoPath" asp-append-version="true" />
+                    <div class="card-footer text-center">
+                        <a asp-controller="teacher" asp-action="details" class="btn btn-primary m-1"
+                           asp-route-id="@teacher.Id">View</a>
+
+                        @if (teacher.isClassTeacher == true && User.IsInRole("Class Teacher") && teacher.UserId == loggedInUserId)
+                        {
+                            <a asp-controller="teacher" asp-action="attendance" class="btn btn-danger m-1" asp-route-id="@teacher.Id">
+                                Mark Attendance
+                            </a>
+                        }
+                        else if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="teacher" asp-action="edit" asp-route-id="@teacher.Id"
+                               class="btn btn-primary m-1">Edit</a>
+                            <a asp-controller="teacher" asp-action="delete" asp-route-id="@teacher.Id" class="btn btn-danger m-1">Delete</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

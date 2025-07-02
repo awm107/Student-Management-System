@@ -1,0 +1,56 @@
+﻿@model StudentManagement.ViewModels.TeacherDeleteViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var photoPath = "~/images/" + (Model.teacher.Photopath ?? "noimage.jpg");
+}
+
+<h2 class="text-danger">Delete Teacher</h2>
+
+<div>
+    <h3 class=" text-danger">Are you sure you want to delete this teacher?</h3>
+    <div class="row justify-content-center m-3">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1>@Model.teacher.Name</h1>
+                </div>
+
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="@photoPath" asp-append-version="true" />
+
+                    <h4>Teacher ID : @Model.teacher.Id</h4>
+                    <h4>Email : @Model.teacher.Email</h4>
+                    <h4>Age : @Model.teacher.Age</h4>
+                    <h4>Gender : @Model.teacher.Gender</h4>
+                    <h4>Class : @Model.teacher.Class</h4>
+                    <h4>Subject : @Model.teacher.Subject</h4>
+
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-controller="teacher" asp-action="index" class="btn btn-primary">Back</a>
+                    <form asp-controller="teacher" asp-action="Delete" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@Model.teacher.Id" />
+                        <span id="confirmDeleteSpan_@Model.teacher.Id" style="display:none">
+                            <br />
+                            <span>Are you sure you still want to delete?</span>
+                            <br />
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a href="#" class="btn btn-primary"
+                               onclick="confirmDelete('@Model.teacher.Id', false)">No</a>
+                        </span>
+
+                        <span id="deleteSpan_@Model.teacher.Id">
+                            <a href="#" class="btn btn-danger"
+                               onclick="confirmDelete('@Model.teacher.Id', true)">Delete</a>
+                        </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/CustomScript.js"></script>
+}

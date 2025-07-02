@@ -1,0 +1,63 @@
+﻿@model StudentManagement.ViewModels.StudentAttendanceViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Student Attendance</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css">
+</head>
+<body>
+    @if (signInManager.IsSignedIn(User) && User.IsInRole("Class Teacher") && Model.Teacher.isClassTeacher == true)
+    {
+        <div class="container mt-4">
+            <div class="align-content-center">
+                <h1 class="text-danger">Student Attendance</h1>
+
+                <h4>Teacher Name: @Model.Teacher.Name</h4>
+                <h4>Class : @Model.Teacher.Class</h4>
+            </div>
+
+            <form asp-action="Attendance" method="post">
+                <div class="row mb-3 fw-bold border-bottom">
+                    <div class="col-md-6">Student Name</div>
+                    <div class="col-md-6">Attendance</div>
+                </div>
+                @if (Model.StudentClassList.Count() > 0)
+                {
+                    @foreach (var student in Model.StudentClassList)
+                    {
+                        <div class="row mb-2">
+                            <div class="col-md-6">@student.Name</div>
+                            <div class="col-md-6">
+                                <select name="attendance" class="form-select">
+                                    <option value="NA">Not Available</option>
+                                    <option value="P">Present</option>
+                                    <option value="A">Absent</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">Save Attendance</button>
+                    </div>
+                }
+                else
+                {
+                    <h3>Sorry, There are no students registered in class @Model.Teacher.Class</h3>
+                    <a asp-action="index" asp-controller="teacher" class="btn btn-primary">Back</a>
+                }
+
+
+
+            </form>
+        </div>
+    }
+    else
+    {
+        <h3>You are not allowed to take attendance. Please contact to Admin for further details</h3>
+        <a asp-action="index" asp-controller="teacher" class="btn btn-primary">Back</a>
+    }
+</body>
+</html>

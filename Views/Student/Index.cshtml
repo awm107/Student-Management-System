@@ -1,0 +1,36 @@
+﻿@model IEnumerable<StudentManagement.Models.Student>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+@{
+    ViewBag.Title = "Student List";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var student in Model)
+        {
+            var photoPath = Url.Content("~/images/" + (student.Photopath ?? "noimage.jpg"));
+            <div class="col-md-4 mb-4">
+                <div class="card m-auto" style="width: 100%">
+                    <div class="card-header">
+                        <h3>@student.Name</h3>
+                    </div>
+                    <img class="card-img-top imageThumbnail img-fluid" src="@photoPath" asp-append-version="true" />
+                    <div class="card-footer text-center">
+                        <a asp-controller="student" asp-action="details" class="btn btn-primary m-1"
+                           asp-route-id="@student.Id">View</a>
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="student" asp-action="edit" asp-route-id="@student.Id"
+                               class="btn btn-primary m-1">Edit</a>
+                            <a asp-controller="student" asp-action="delete" asp-route-id="@student.Id" class="btn btn-danger m-1">Delete</a>
+                        }
+                        <a asp-controller="student" asp-action="enroll" class="btn btn-primary m-1"
+                           asp-route-id="@student.Id">Transcript</a>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

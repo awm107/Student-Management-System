@@ -1,0 +1,19 @@
+﻿@model StudentManagement.ViewModels.SubjectsEnrolledViewModel
+
+<form asp-action="Index" method="post">
+    <div>
+        <h3>Select Subjects</h3>
+        @foreach (var subject in Model.Subjects)
+        {
+            <div>
+                <input type="checkbox"
+                       name="SelectedSubjects"
+                       value="@subject"
+                       @(Model.SelectedSubjects.Contains(subject) ? "checked" : "") />
+                <label>@subject</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit">Submit</button>
+</form>

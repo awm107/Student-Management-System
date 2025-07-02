@@ -1,0 +1,46 @@
+﻿@model StudentManagement.ViewModels.TeacherDetailsViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var photoPath = "~/images/" + (Model.teacher.Photopath ?? "noimage.jpg");
+
+}
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header">
+                <h1>@Model.teacher.Name</h1>
+                @if (Model.teacher.isClassTeacher == true)
+                {
+                    <h3>(Class Teacher)</h3>
+                }
+            </div>
+
+            <div class="card-body text-center">
+                <img class="card-img-top" src="@photoPath" asp-append-version="true" />
+
+                <h4>Teacher ID : @Model.teacher.Id</h4>
+                <h4>Email : @Model.teacher.Email</h4>
+                <h4>Age : @Model.teacher.Age</h4>
+                <h4>Class : @Model.teacher.Class</h4>
+                <h4>Subject : @Model.teacher.Subject</h4>
+                <h4>Gender : @Model.teacher.Gender</h4>
+
+            </div>
+            <div class="card-footer text-center">
+                <a asp-controller="teacher" asp-action="index" class="btn btn-primary">Back</a>
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <a asp-action="edit" asp-controller="teacher"
+                       asp-route-id="@Model.teacher.Id" class="btn btn-primary">Edit</a>
+                    <a asp-controller="teacher" asp-action="delete" asp-route-id="@Model.teacher.Id" class="btn btn-danger m-1">Delete</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/CustomScript.js"></script>
+}
